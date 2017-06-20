@@ -42,40 +42,46 @@
     
   $(document).ready(function(){
 
-    var res = [{"date": "2017-04-12","temp": 24.7, "moisture": 0},{"date": "2017-04-32","temp": 2.7, "moisture": 10}];
-
-    alert(res[1]["temp"]);
+    var res = [];
 
     $.ajax({
     type:"GET",
-    url:"http://pubsub.pubnub.com/history/sub-c-f977d9fe-525c-11e7-ae12-02ee2ddab7fe/vfarm1/0/100",
+    url:"http://pubsub.pubnub.com/history/sub-c-f977d9fe-525c-11e7-ae12-02ee2ddab7fe/light3/0/1000",
     data: {},
     success: function(data){
-      alert(data);
-    }
-    });
+        var tempi = JSON.parse(data);
+        for(var i=0; i<tempi.length; i++)
+        {
+          res.push({
+            y: tempi[i].date,
+            item1: tempi[i].light
+          });
+        }
 
-     var line = new Morris.Line({
+        var line = new Morris.Line({
       element: 'line-chart',
       resize: true,
-      data: [
-        {y: '2011 Q1', item1: 2666},
-        {y: '2011 Q2', item1: 2778},
-        {y: '2011 Q3', item1: 4912},
-        {y: '2011 Q4', item1: 3767},
-        {y: '2012 Q1', item1: 6810},
-        {y: '2012 Q2', item1: 5670},
-        {y: '2012 Q3', item1: 4820},
-        {y: '2012 Q4', item1: 15073},
-        {y: '2013 Q1', item1: 10687},
-        {y: '2013 Q2', item1: 8432}
-      ],
+      data: res,
       xkey: 'y',
       ykeys: ['item1'],
       labels: ['Item 1'],
       lineColors: ['#3c8dbc'],
       hideHover: 'auto'
     });
+
+    }
+    });
+
+    $.ajax({
+    type:"GET",
+    url:"http://pubsub.pubnub.com/history/sub-c-f977d9fe-525c-11e7-ae12-02ee2ddab7fe/vfarm2/0/1000",
+    data: {},
+    success: function(data){
+      
+    }
+    });
+
+     
 
       var line = new Morris.Line({
       element: 'line-chart1',
@@ -205,7 +211,7 @@
           <!-- LINE CHART -->
           <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Temparature</h3>
+              <h3 class="box-title">Light</h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
